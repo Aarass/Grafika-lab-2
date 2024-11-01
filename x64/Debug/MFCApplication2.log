@@ -1,9 +1,1 @@
-﻿  Microsoft (R) C/C++ Optimizing Compiler Version 19.40.33811 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  cl /c /ZI /JMC /W3 /WX- /diagnostics:column /sdl /Od /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"pch.h" /Fp"x64\Debug\MFCApplication2.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt MFCApplication2View.cpp
-  MFCApplication2View.cpp
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(171,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(172,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(173,15): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(174,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-  MFCApplication2.vcxproj -> C:\Users\proko\source\repos\MFCApplication2\x64\Debug\MFCApplication2.exe
+﻿  MFCApplication2.vcxproj -> C:\Users\proko\source\repos\MFCApplication2\x64\Debug\MFCApplication2.exe

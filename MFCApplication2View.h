@@ -8,16 +8,22 @@ class CMFCApplication2View : public CView
 {
 private:
 	boolean shouldDrawGrid = false;
+  int width = 500;
+	int height = 500;
+	int cellSizeX = width / 20;
+	int cellSizeY = height / 20;
+	float angle1 = 0.0f;
+	float angle2 = 0.0f;
 
 private: 
   HENHMETAFILE greenPart;
   HENHMETAFILE yellowPart;
 
 private:
-	void Translate(CDC* pDC, float dX, float dY, bool rightMultiply);
-	void Scale(CDC* pDC, float sX, float sY, bool rightMultiply);
-	void Rotate(CDC* pDC, float angle, bool rightMultiply);
-	void DrawBackground(CDC* pDC, int width, int height);
+	void Translate(CDC* pDC, float dX, float dY, bool rightMultiply = false);
+	void Scale(CDC* pDC, float sX, float sY, bool rightMultiply = false);
+	void Rotate(CDC* pDC, float angle, bool rightMultiply = false);
+	void DrawBackground(CDC* pDC);
 	void DrawFigure(CDC* pDC);
 	void DrawGrid(CDC* pDC, int dx, int dy, int width, int height);
 
