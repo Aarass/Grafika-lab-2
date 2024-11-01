@@ -185,165 +185,158 @@ void CMFCApplication2View::DrawBackground(CDC* pDC)
 
 void CMFCApplication2View::DrawFigure(CDC* pDC)
 {
-	int oldGraphicsMode = pDC->SetGraphicsMode(GM_ADVANCED);
-	XFORM oldTransform; pDC->GetWorldTransform(&oldTransform);
-
-
-	Translate(pDC, width / 2, height, true);
-
-
-	// // Translate(pDC, width / 2, height);
-	// // Translate(pDC, 100, 0);
-	// Scale(pDC, .3f, 1.0f);
-	// Rotate(pDC, PI / 4);
-	// pDC->Rectangle(-25, -25, 25, 25);
-
-	// return;
-
-	// Node n1(1), n2(3), n3(2), n4(2), n5(1), n6(2);
-	// Edge e1(&n1, true), e2(&n2, false), e3(&n2, false), e4(&n2, false);
-	// e1.AttachNode(&n2);
-	// n1.Draw(pDC);
-
-	CBrush brush(RGB(0, 204, 0));
-	pDC->SelectObject(brush);
-
-	XFORM tmpTransform; 
-	std::vector<XFORM> junctions;
-	junctions.reserve(6);
-
+	const int oldGraphicsMode = pDC->SetGraphicsMode(GM_ADVANCED);
 
 	const int r = cellSizeX / 2 - 2;
 	const int defaultHalfWidth = 1.3f * cellSizeX;
 	const int defaultHeight = 3 * cellSizeY;
 
-	Translate(pDC, 0, -3 * cellSizeY);
-
-	pDC->GetWorldTransform(&tmpTransform);
-	junctions.push_back(tmpTransform);
-	// pDC->Ellipse(-r, -r, r, r);
-	Rotate(pDC, angle1);
-	{
+	auto drawYellowPart = [&]() {
 		pDC->PlayMetaFile(yellowPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-		Translate(pDC, 0, -defaultHeight);
-		pDC->GetWorldTransform(&tmpTransform);
-		junctions.push_back(tmpTransform);
-		// pDC->Ellipse(-r, -r, r, r);
-
-		Scale(pDC, 1.0f / 3.0f, 1.0f);
+	};
+	auto drawGreenPart = [&]() {
 		pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-		Scale(pDC, 3.0f, 1.0f);
+	};
 
+	CBrush brush(RGB(0, 204, 0));
+	pDC->SelectObject(brush);
 
-
-		// Leva strana
-		Rotate(pDC, -PI / 4);
+	push(pDC);
+	{
+		Translate(pDC, width / 2, height, true);
+		push(pDC);
 		{
-			Scale(pDC, 1.0f / 3.0f, 1.0f);
-			pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-			Scale(pDC, 3.0f, 1.0f);
+			Translate(pDC, 0, -defaultHeight);
 
-			Translate(pDC, 0, -3 * cellSizeY);
+			push(pDC);
 			{
-				pDC->GetWorldTransform(&tmpTransform);
-				junctions.push_back(tmpTransform);
-				// pDC->Ellipse(-r, -r, r, r);
+				Rotate(pDC, angle1);
+				drawYellowPart();
 
-				Rotate(pDC, -PI / 4);
+				Translate(pDC, 0, -defaultHeight);
+				push(pDC);
 				{
-					Scale(pDC, 0.7f, 1.0f);
-					pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-					Scale(pDC, 1.0f / 0.7f, 1.0f);
-				}
-				Rotate(pDC, PI / 4);
-
-
-				Rotate(pDC, PI / 4);
-				{
-					Scale(pDC, 0.7f, 1.0f);
-					pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-					Scale(pDC, 1.0f / 0.7f, 1.0f);
-
-					Translate(pDC, 0, -3 * cellSizeY);
+					// Levo
+					push(pDC);
 					{
-						pDC->GetWorldTransform(&tmpTransform);
-						junctions.push_back(tmpTransform);
-						// pDC->Ellipse(-r, -r, r, r);
+						Rotate(pDC, -PI / 4);
+						push(pDC);
+						{
+							Scale(pDC, 1.0f / 3.0f, 1.0f);
+							drawGreenPart();
+						}
+						pop(pDC);
 
-						// Scale(pDC, 0.5f, 1.0f);
-						pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-						// Scale(pDC, 2.0f, 1.0f);
+						Translate(pDC, 0, -defaultHeight);
+
+						// Levo
+						push(pDC);
+						{
+							Rotate(pDC, -PI / 4);
+							Scale(pDC, 0.7f, 1.0f);
+							drawGreenPart();
+						}
+						pop(pDC);
+
+						// Gore
+						push(pDC);
+						{
+							Rotate(pDC, PI / 4);
+
+							push(pDC);
+							{
+								Scale(pDC, 0.7f, 1.0f);
+								drawGreenPart();
+							}
+							pop(pDC);
+
+							Translate(pDC, 0, -defaultHeight);
+							drawGreenPart();
+
+							pDC->Ellipse(-r, -r, r, r);
+						}
+						pop(pDC);
+						pDC->Ellipse(-r, -r, r, r);
 					}
-					Translate(pDC, 0, 3 * cellSizeY);
+					pop(pDC);
+					pDC->Ellipse(-r, -r, r, r);
+
+					// Srednje
+					push(pDC);
+					{
+						Scale(pDC, 1.0f / 3.0f, 1.0f);
+						drawGreenPart();
+					}
+					pop(pDC);
+
+					// Desno
+					push(pDC);
+					{
+						Rotate(pDC, PI / 4);
+						push(pDC);
+						{
+							Scale(pDC, 1.0f / 3.0f, 1.0f);
+							drawGreenPart();
+						}
+						pop(pDC);
+
+						Translate(pDC, 0, -defaultHeight);
+
+						push(pDC);
+						{
+							Rotate(pDC, -PI / 4 + angle2);
+							Scale(pDC, 0.7f, 1.0f);
+							drawYellowPart();
+						}
+						pop(pDC);
+
+						push(pDC);
+						{
+							Rotate(pDC, PI / 4);
+							push(pDC);
+							{
+								Scale(pDC, 0.7f, 1.0f);
+								drawGreenPart();
+							}
+							pop(pDC);
+
+							Translate(pDC, 0, -defaultHeight);
+
+							// Gore
+							push(pDC);
+							{
+								Rotate(pDC, -PI / 4);
+								Scale(pDC, 0.7f, 1.0f);
+								drawGreenPart();
+							}
+							pop(pDC);
+
+							// Dole
+							push(pDC);
+							{
+								Rotate(pDC, PI / 4);
+								Scale(pDC, 0.7f, 1.0f);
+								drawGreenPart();
+							}
+							pop(pDC);
+							pDC->Ellipse(-r, -r, r, r);
+						}
+						pop(pDC);
+						pDC->Ellipse(-r, -r, r, r);
+					}
+					pop(pDC);
+					pDC->Ellipse(-r, -r, r, r);
 				}
-				Rotate(pDC, -PI / 4);
-
+				pop(pDC);
+				pDC->Ellipse(-r, -r, r, r);
 			}
-			Translate(pDC, 0, 3 * cellSizeY);
-
+			pop(pDC);
+			pDC->Ellipse(-r, -r, r, r);
 		}
-		Rotate(pDC, PI / 4);
-
-		// Desna strana
-		Rotate(pDC, PI / 4);
-		{
-			Scale(pDC, 1.0f / 3.0f, 1.0f);
-			pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-			Scale(pDC, 3.0f, 1.0f);
-
-			Translate(pDC, 0, -3 * cellSizeY);
-			pDC->GetWorldTransform(&tmpTransform);
-			junctions.push_back(tmpTransform);
-			// pDC->Ellipse(-r, -r, r, r);
-
-			Rotate(pDC, -PI / 4 + angle2);
-			{
-				Scale(pDC, 0.7f, 1.0f);
-				pDC->PlayMetaFile(yellowPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-				Scale(pDC, 1.0f / 0.7f, 1.0f);
-			}
-			Rotate(pDC, PI / 4 - angle2);
-
-
-			Rotate(pDC, PI / 4);
-			{
-				Scale(pDC, 0.7f, 1.0f);
-				pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-				Scale(pDC, 1.0f / 0.7f, 1.0f);
-
-				Translate(pDC, 0, -3 * cellSizeY);
-				pDC->GetWorldTransform(&tmpTransform);
-				junctions.push_back(tmpTransform);
-				// pDC->Ellipse(-r, -r, r, r);
-
-				Rotate(pDC, -PI / 4);
-				{
-					Scale(pDC, 0.7f, 1.0f);
-					pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-					Scale(pDC, 1.0f / 0.7f, 1.0f);
-				}
-				Rotate(pDC, PI / 4);
-
-
-				Rotate(pDC, PI / 4);
-				{
-					Scale(pDC, 0.7f, 1.0f);
-					pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-					Scale(pDC, 1.0f / 0.7f, 1.0f);
-				}
-				Rotate(pDC, -PI / 4);
-			}
-			Rotate(pDC, -PI / 4);
-		}
-		Rotate(pDC, -PI / 4);
+		pop(pDC);
 	}
+	pop(pDC);
 
-	for (auto& junction : junctions) {
-		pDC->SetWorldTransform(&junction);
-		pDC->Ellipse(-r, -r, r, r);
-	}
-
-	pDC->SetWorldTransform(&oldTransform);
 	pDC->SetGraphicsMode(oldGraphicsMode);
 
 	CBrush potBrush(RGB(222,148,0));
@@ -351,7 +344,7 @@ void CMFCApplication2View::DrawFigure(CDC* pDC)
 	pDC->SelectStockObject(BLACK_PEN);
 	pDC->SelectObject(potBrush);
 
-	pDC->Rectangle(7.5f * cellSizeX, 17 * cellSizeY, 12.5f * cellSizeX ,18 * cellSizeY);
+	pDC->Rectangle(7.5f * cellSizeX, 17 * cellSizeY, 12.5f * cellSizeX, 18 * cellSizeY);
 
 	POINT lpPoints[] = {
 		POINT {8 * cellSizeX, 18 * cellSizeY},
@@ -440,3 +433,151 @@ void CMFCApplication2View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
+
+void CMFCApplication2View::push(CDC* pDC) {
+	XFORM form; pDC->GetWorldTransform(&form);
+	this->_transforms.push(form);
+}
+
+void CMFCApplication2View::pop(CDC* pDC) {
+	XFORM form = this->_transforms.top();
+	this->_transforms.pop();
+	pDC->SetWorldTransform(&form);
+}
+
+	// // Translate(pDC, width / 2, height);
+	// // Translate(pDC, 100, 0);
+	// Scale(pDC, .3f, 1.0f);
+	// Rotate(pDC, PI / 4);
+	// pDC->Rectangle(-25, -25, 25, 25);
+
+	// return;
+
+	// Node n1(1), n2(3), n3(2), n4(2), n5(1), n6(2);
+	// Edge e1(&n1, true), e2(&n2, false), e3(&n2, false), e4(&n2, false);
+	// e1.AttachNode(&n2);
+	// n1.Draw(pDC);
+
+
+
+
+
+
+
+
+
+
+
+
+	// Rotate(pDC, angle1);
+	// {
+	// 	pDC->PlayMetaFile(yellowPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 	Translate(pDC, 0, -defaultHeight);
+	// 	// pDC->Ellipse(-r, -r, r, r);
+
+	// 	Scale(pDC, 1.0f / 3.0f, 1.0f);
+	// 	pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 	Scale(pDC, 3.0f, 1.0f);
+
+
+
+	// 	// Leva strana
+	// 	Rotate(pDC, -PI / 4);
+	// 	{
+	// 		Scale(pDC, 1.0f / 3.0f, 1.0f);
+	// 		pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 		Scale(pDC, 3.0f, 1.0f);
+
+	// 		Translate(pDC, 0, -3 * cellSizeY);
+	// 		{
+	// 			// pDC->Ellipse(-r, -r, r, r);
+
+	// 			Rotate(pDC, -PI / 4);
+	// 			{
+	// 				Scale(pDC, 0.7f, 1.0f);
+	// 				pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 				Scale(pDC, 1.0f / 0.7f, 1.0f);
+	// 			}
+	// 			Rotate(pDC, PI / 4);
+
+
+	// 			Rotate(pDC, PI / 4);
+	// 			{
+	// 				Scale(pDC, 0.7f, 1.0f);
+	// 				pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 				Scale(pDC, 1.0f / 0.7f, 1.0f);
+
+	// 				Translate(pDC, 0, -3 * cellSizeY);
+	// 				{
+	// 					// pDC->Ellipse(-r, -r, r, r);
+
+	// 					// Scale(pDC, 0.5f, 1.0f);
+	// 					pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 					// Scale(pDC, 2.0f, 1.0f);
+	// 				}
+	// 				Translate(pDC, 0, 3 * cellSizeY);
+	// 			}
+	// 			Rotate(pDC, -PI / 4);
+
+	// 		}
+	// 		Translate(pDC, 0, 3 * cellSizeY);
+
+	// 	}
+	// 	Rotate(pDC, PI / 4);
+
+	// 	// Desna strana
+	// 	Rotate(pDC, PI / 4);
+	// 	{
+	// 		Scale(pDC, 1.0f / 3.0f, 1.0f);
+	// 		pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 		Scale(pDC, 3.0f, 1.0f);
+
+	// 		Translate(pDC, 0, -3 * cellSizeY);
+	// 		// pDC->Ellipse(-r, -r, r, r);
+
+	// 		Rotate(pDC, -PI / 4 + angle2);
+	// 		{
+	// 			Scale(pDC, 0.7f, 1.0f);
+	// 			pDC->PlayMetaFile(yellowPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 			Scale(pDC, 1.0f / 0.7f, 1.0f);
+	// 		}
+	// 		Rotate(pDC, PI / 4 - angle2);
+
+
+	// 		Rotate(pDC, PI / 4);
+	// 		{
+	// 			Scale(pDC, 0.7f, 1.0f);
+	// 			pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 			Scale(pDC, 1.0f / 0.7f, 1.0f);
+
+	// 			Translate(pDC, 0, -3 * cellSizeY);
+	// 			// pDC->Ellipse(-r, -r, r, r);
+
+	// 			Rotate(pDC, -PI / 4);
+	// 			{
+	// 				Scale(pDC, 0.7f, 1.0f);
+	// 				pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 				Scale(pDC, 1.0f / 0.7f, 1.0f);
+	// 			}
+	// 			Rotate(pDC, PI / 4);
+
+
+	// 			Rotate(pDC, PI / 4);
+	// 			{
+	// 				Scale(pDC, 0.7f, 1.0f);
+	// 				pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 				Scale(pDC, 1.0f / 0.7f, 1.0f);
+	// 			}
+	// 			Rotate(pDC, -PI / 4);
+	// 		}
+	// 		Rotate(pDC, -PI / 4);
+	// 	}
+	// 	Rotate(pDC, -PI / 4);
+	// }
+
+	// for (auto& junction : junctions) {
+	// 	pDC->SetWorldTransform(&junction);
+	// 	pDC->Ellipse(-r, -r, r, r);
+	// }
+
+	// pDC->SetWorldTransform(&oldTransform);

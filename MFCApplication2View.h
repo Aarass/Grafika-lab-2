@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <stack>
 
 class CMFCApplication2View : public CView
 {
@@ -14,6 +15,11 @@ private:
 	int cellSizeY = height / 20;
 	float angle1 = 0.0f;
 	float angle2 = 0.0f;
+
+private:
+	std::stack<XFORM> _transforms;
+	void push(CDC*);
+	void pop(CDC*);
 
 private: 
   HENHMETAFILE greenPart;
