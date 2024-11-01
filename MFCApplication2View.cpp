@@ -20,6 +20,8 @@
 #define new DEBUG_NEW
 #endif
 
+#include <functional>
+
 // class Edge;
 // class Node;
 
@@ -79,6 +81,15 @@
 // 	}
 // }
 
+struct Part {
+	double rotation;
+	bool controllable = false;
+	std::vector<Part*> children;
+};
+
+
+
+
 // CMFCApplication2View
 
 IMPLEMENT_DYNCREATE(CMFCApplication2View, CView)
@@ -89,6 +100,8 @@ BEGIN_MESSAGE_MAP(CMFCApplication2View, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_KEYDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 // CMFCApplication2View construction/destruction
@@ -163,7 +176,21 @@ void CMFCApplication2View::OnDraw(CDC* pDC)
 	if (!pDoc) return;
 
 	DrawBackground(pDC);
+
+	const int oldGraphicsMode = pDC->SetGraphicsMode(GM_ADVANCED);
+	XFORM originalTransform; pDC->GetWorldTransform(&originalTransform);
+
+	Scale(pDC, scale, scale, true);
+	if (shouldFollowMouse) {
+		Translate(pDC, offset.x, offset.y,true);
+	} else {
+		Translate(pDC, width / 2, height - 3 * cellSizeY, true);
+	}
+
 	DrawFigure(pDC);
+
+	pDC->SetWorldTransform(&originalTransform);
+	pDC->SetGraphicsMode(oldGraphicsMode);
 
 	if (shouldDrawGrid) {
 		DrawGrid(pDC, cellSizeX, cellSizeY, width, height);
@@ -185,174 +212,78 @@ void CMFCApplication2View::DrawBackground(CDC* pDC)
 
 void CMFCApplication2View::DrawFigure(CDC* pDC)
 {
-	const int oldGraphicsMode = pDC->SetGraphicsMode(GM_ADVANCED);
-
+	const int partWidth = 2.6f * cellSizeX;
+	const int partHeight = 3 * cellSizeY;
 	const int r = cellSizeX / 2 - 2;
-	const int defaultHalfWidth = 1.3f * cellSizeX;
-	const int defaultHeight = 3 * cellSizeY;
 
-	auto drawYellowPart = [&]() {
-		pDC->PlayMetaFile(yellowPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-	};
-	auto drawGreenPart = [&]() {
-		pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
-	};
+	std::function<void(Part, float)> draw = [&](const Part& p, float scale) {
+		XFORM oldTransform; pDC->GetWorldTransform(&oldTransform);
 
-	CBrush brush(RGB(0, 204, 0));
-	pDC->SelectObject(brush);
+		Rotate(pDC, p.rotation);
 
-	push(pDC);
-	{
-		Translate(pDC, width / 2, height, true);
-		push(pDC);
-		{
-			Translate(pDC, 0, -defaultHeight);
+		if (p.controllable) {
+			pDC->PlayMetaFile(yellowPart, CRect(-(partWidth >> 1) * scale, 0, (partWidth >> 1) * scale, -partHeight)); 
+		} else {
+			pDC->PlayMetaFile(greenPart, CRect(-(partWidth >> 1) * scale, 0, (partWidth >> 1) * scale, -partHeight)); 
+		}
 
-			push(pDC);
-			{
-				Rotate(pDC, angle1);
-				drawYellowPart();
+		Translate(pDC, 0, -partHeight);
 
-				Translate(pDC, 0, -defaultHeight);
-				push(pDC);
-				{
-					// Levo
-					push(pDC);
-					{
-						Rotate(pDC, -PI / 4);
-						push(pDC);
-						{
-							Scale(pDC, 1.0f / 3.0f, 1.0f);
-							drawGreenPart();
-						}
-						pop(pDC);
-
-						Translate(pDC, 0, -defaultHeight);
-
-						// Levo
-						push(pDC);
-						{
-							Rotate(pDC, -PI / 4);
-							Scale(pDC, 0.7f, 1.0f);
-							drawGreenPart();
-						}
-						pop(pDC);
-
-						// Gore
-						push(pDC);
-						{
-							Rotate(pDC, PI / 4);
-
-							push(pDC);
-							{
-								Scale(pDC, 0.7f, 1.0f);
-								drawGreenPart();
-							}
-							pop(pDC);
-
-							Translate(pDC, 0, -defaultHeight);
-							drawGreenPart();
-
-							pDC->Ellipse(-r, -r, r, r);
-						}
-						pop(pDC);
-						pDC->Ellipse(-r, -r, r, r);
-					}
-					pop(pDC);
-					pDC->Ellipse(-r, -r, r, r);
-
-					// Srednje
-					push(pDC);
-					{
-						Scale(pDC, 1.0f / 3.0f, 1.0f);
-						drawGreenPart();
-					}
-					pop(pDC);
-
-					// Desno
-					push(pDC);
-					{
-						Rotate(pDC, PI / 4);
-						push(pDC);
-						{
-							Scale(pDC, 1.0f / 3.0f, 1.0f);
-							drawGreenPart();
-						}
-						pop(pDC);
-
-						Translate(pDC, 0, -defaultHeight);
-
-						push(pDC);
-						{
-							Rotate(pDC, -PI / 4 + angle2);
-							Scale(pDC, 0.7f, 1.0f);
-							drawYellowPart();
-						}
-						pop(pDC);
-
-						push(pDC);
-						{
-							Rotate(pDC, PI / 4);
-							push(pDC);
-							{
-								Scale(pDC, 0.7f, 1.0f);
-								drawGreenPart();
-							}
-							pop(pDC);
-
-							Translate(pDC, 0, -defaultHeight);
-
-							// Gore
-							push(pDC);
-							{
-								Rotate(pDC, -PI / 4);
-								Scale(pDC, 0.7f, 1.0f);
-								drawGreenPart();
-							}
-							pop(pDC);
-
-							// Dole
-							push(pDC);
-							{
-								Rotate(pDC, PI / 4);
-								Scale(pDC, 0.7f, 1.0f);
-								drawGreenPart();
-							}
-							pop(pDC);
-							pDC->Ellipse(-r, -r, r, r);
-						}
-						pop(pDC);
-						pDC->Ellipse(-r, -r, r, r);
-					}
-					pop(pDC);
-					pDC->Ellipse(-r, -r, r, r);
-				}
-				pop(pDC);
-				pDC->Ellipse(-r, -r, r, r);
+		if (p.children.size()) {
+			float scaleFactor = 1.0f;
+			switch (p.children.size()) {
+				case 2:
+					scaleFactor = 0.7f;
+					break;
+				case 3:
+					scaleFactor = 1.0f / 3.0f;
+					break;
 			}
-			pop(pDC);
+
+			for (auto c : p.children) {
+				draw(*c, scaleFactor);
+			}
+
 			pDC->Ellipse(-r, -r, r, r);
 		}
-		pop(pDC);
-	}
-	pop(pDC);
 
-	pDC->SetGraphicsMode(oldGraphicsMode);
-
-	CBrush potBrush(RGB(222,148,0));
-
-	pDC->SelectStockObject(BLACK_PEN);
-	pDC->SelectObject(potBrush);
-
-	pDC->Rectangle(7.5f * cellSizeX, 17 * cellSizeY, 12.5f * cellSizeX, 18 * cellSizeY);
-
-	POINT lpPoints[] = {
-		POINT {8 * cellSizeX, 18 * cellSizeY},
-		POINT {12 * cellSizeX, 18 * cellSizeY},
-		POINT {(long)(11.5 * cellSizeX), 20 * cellSizeY},
-		POINT {(long)(8.5 * cellSizeX), 20 * cellSizeY},
+		pDC->SetWorldTransform(&oldTransform);
 	};
 
+
+	Part p1{angle1, true}, p2{-PI / 4}, p3{0.0}, p4{PI/4}, p5{-PI/4}, p6{PI/4}, p7{0.0f}, p8{-PI / 4 + angle2, true}, p9{PI / 4}, p10{-PI / 4}, p11{PI / 4};
+
+	p1.children.reserve(3);
+	p1.children.push_back(&p2);
+	p1.children.push_back(&p3);
+	p1.children.push_back(&p4);
+	p2.children.push_back(&p5);
+	p2.children.push_back(&p6);
+	p6.children.push_back(&p7);
+	p4.children.push_back(&p8);
+	p4.children.push_back(&p9);
+	p9.children.push_back(&p10);
+	p9.children.push_back(&p11);
+
+
+	CBrush greenBrush(RGB(0, 204, 0)), potBrush(RGB(222,148,0));
+
+	pDC->SelectStockObject(BLACK_PEN);
+	pDC->SelectObject(greenBrush);
+
+	draw(p1, 1.0f);
+	pDC->Ellipse(-r, -r, r, r);
+
+	pDC->SelectObject(potBrush);
+
+	POINT lpPoints[] = {
+		POINT {-2 * cellSizeX, 1 * cellSizeY},
+		POINT {2 * cellSizeX, 1 * cellSizeY},
+		POINT {(long)(1.5 * cellSizeX), 3 * cellSizeY},
+		POINT {(long)(-1.5 * cellSizeX), 3 * cellSizeY},
+	};
+
+	pDC->Rectangle(-2.5f * cellSizeX, 0.0f, 2.5f * cellSizeX, 1 * cellSizeY);
 	pDC->Polygon(lpPoints, 4);
 }
 
@@ -415,6 +346,9 @@ void CMFCApplication2View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		case VK_RETURN:
 			shouldDrawGrid = !shouldDrawGrid;
 			break;
+		case VK_SPACE:
+			shouldFollowMouse = !shouldFollowMouse;
+			break;
 		case 'D':
 			angle1 += PI / 32;
 			break;
@@ -434,15 +368,24 @@ void CMFCApplication2View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
-void CMFCApplication2View::push(CDC* pDC) {
-	XFORM form; pDC->GetWorldTransform(&form);
-	this->_transforms.push(form);
+void CMFCApplication2View::OnMouseMove(UINT nFlags, CPoint point)
+{
+	offset = point;
+
+	if (shouldFollowMouse) {
+		Invalidate();
+	}
+
+	CView::OnMouseMove(nFlags, point);
 }
 
-void CMFCApplication2View::pop(CDC* pDC) {
-	XFORM form = this->_transforms.top();
-	this->_transforms.pop();
-	pDC->SetWorldTransform(&form);
+
+BOOL CMFCApplication2View::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	scale += zDelta * 0.001f;
+	Invalidate();
+
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 	// // Translate(pDC, width / 2, height);
@@ -581,3 +524,41 @@ void CMFCApplication2View::pop(CDC* pDC) {
 	// }
 
 	// pDC->SetWorldTransform(&oldTransform);
+
+
+
+
+
+
+
+
+
+
+
+	// std::stack<Part> stack;
+
+	// stack.push(p1);
+	// while(!stack.empty()) {
+	// 	auto &current = stack.top();
+	// 	stack.pop();
+
+	// 	Rotate(pDC, current.rotation);
+
+	// 	if (current.controllable) {
+	// 		pDC->PlayMetaFile(yellowPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 	} else {
+	// 		pDC->PlayMetaFile(greenPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
+	// 	}
+
+	// 	if (!current.children.empty()) {
+	// 		for (auto p : current.children) {
+	// 			stack.push(p);
+	// 		}
+
+	// 		Translate(pDC, 0, -defaultHeight);
+
+	// 	}
+	// }
+
+
+	// return;
