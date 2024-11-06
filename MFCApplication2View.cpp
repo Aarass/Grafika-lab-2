@@ -102,6 +102,8 @@ BEGIN_MESSAGE_MAP(CMFCApplication2View, CView)
 	ON_WM_KEYDOWN()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSEWHEEL()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 // CMFCApplication2View construction/destruction
@@ -182,12 +184,17 @@ void CMFCApplication2View::OnDraw(CDC* pDC)
 
 	Scale(pDC, scale, scale, true);
 	if (shouldFollowMouse) {
-		Translate(pDC, offset.x, offset.y,true);
+		Translate(pDC, offset.x, offset.y, true);
 	} else {
 		Translate(pDC, width / 2, height - 3 * cellSizeY, true);
 	}
 
+	Translate(pDC, - width / 2, - height / 2, true);
+	Rotate(pDC, -PI / 2, true);
+	Translate(pDC, width / 2, height / 2, true);
+
 	DrawFigure(pDC);
+
 
 	pDC->SetWorldTransform(&originalTransform);
 	pDC->SetGraphicsMode(oldGraphicsMode);
@@ -221,15 +228,14 @@ void CMFCApplication2View::DrawFigure(CDC* pDC)
 
 		Rotate(pDC, p.rotation);
 
-		if (p.controllable) {
-			pDC->PlayMetaFile(yellowPart, CRect(-(partWidth >> 1) * scale, 0, (partWidth >> 1) * scale, -partHeight)); 
-		} else {
-			pDC->PlayMetaFile(greenPart, CRect(-(partWidth >> 1) * scale, 0, (partWidth >> 1) * scale, -partHeight)); 
-		}
-
-		Translate(pDC, 0, -partHeight);
+		// pDC->PlayMetaFile(p.controllable ? yellowPart : greenPart, CRect(-(partWidth >> 1) * scale, 0, (partWidth >> 1) * scale, -partHeight)); 
+		Scale(pDC, scale, 1.0f);
+		pDC->PlayMetaFile(p.controllable ? yellowPart : greenPart, CRect(-(partWidth >> 1), 0, (partWidth >> 1), -partHeight)); 
+		Scale(pDC, 1.0f / scale, 1.0f);
 
 		if (p.children.size()) {
+			Translate(pDC, 0, -partHeight);
+
 			float scaleFactor = 1.0f;
 			switch (p.children.size()) {
 				case 2:
@@ -250,21 +256,19 @@ void CMFCApplication2View::DrawFigure(CDC* pDC)
 		pDC->SetWorldTransform(&oldTransform);
 	};
 
+	Part p1{0.0}, p2{-PI / 4}, p3{PI/4 + angle1, true}, p4{-PI/4}, p5{0.0}, p6{PI/4}, p7{0.0f}, p8{-PI / 4}, p9{0.0}, p10{PI / 4}, p11{angle2, true};
+	// p1.children.reserve(3); p2.children.reserve(2); p6.children.reserve(1); p4.children.reserve(2); p9.children.reserve(2);
 
-	Part p1{angle1, true}, p2{-PI / 4}, p3{0.0}, p4{PI/4}, p5{-PI/4}, p6{PI/4}, p7{0.0f}, p8{-PI / 4 + angle2, true}, p9{PI / 4}, p10{-PI / 4}, p11{PI / 4};
-
-	p1.children.reserve(3);
 	p1.children.push_back(&p2);
 	p1.children.push_back(&p3);
-	p1.children.push_back(&p4);
-	p2.children.push_back(&p5);
-	p2.children.push_back(&p6);
-	p6.children.push_back(&p7);
-	p4.children.push_back(&p8);
-	p4.children.push_back(&p9);
-	p9.children.push_back(&p10);
-	p9.children.push_back(&p11);
-
+	p3.children.push_back(&p4);
+	p3.children.push_back(&p5);
+	p3.children.push_back(&p6);
+	p4.children.push_back(&p7);
+	p5.children.push_back(&p8);
+	p5.children.push_back(&p9);
+	p5.children.push_back(&p10);
+	p6.children.push_back(&p11);
 
 	CBrush greenBrush(RGB(0, 204, 0)), potBrush(RGB(222,148,0));
 
@@ -388,30 +392,10 @@ BOOL CMFCApplication2View::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-	// // Translate(pDC, width / 2, height);
-	// // Translate(pDC, 100, 0);
-	// Scale(pDC, .3f, 1.0f);
-	// Rotate(pDC, PI / 4);
-	// pDC->Rectangle(-25, -25, 25, 25);
-
-	// return;
-
-	// Node n1(1), n2(3), n3(2), n4(2), n5(1), n6(2);
-	// Edge e1(&n1, true), e2(&n2, false), e3(&n2, false), e4(&n2, false);
-	// e1.AttachNode(&n2);
-	// n1.Draw(pDC);
 
 
 
-
-
-
-
-
-
-
-
-
+	
 	// Rotate(pDC, angle1);
 	// {
 	// 	pDC->PlayMetaFile(yellowPart, CRect(-defaultHalfWidth, 0, defaultHalfWidth, -defaultHeight)); 
@@ -562,3 +546,22 @@ BOOL CMFCApplication2View::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 
 	// return;
+
+void CMFCApplication2View::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	shouldFollowMouse = true;
+
+	Invalidate();
+
+	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CMFCApplication2View::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	shouldFollowMouse = false;
+
+	Invalidate();
+
+	CView::OnLButtonUp(nFlags, point);
+}

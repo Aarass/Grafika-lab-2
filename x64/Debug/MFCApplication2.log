@@ -2,27 +2,28 @@
   Copyright (C) Microsoft Corporation.  All rights reserved.
   cl /c /ZI /JMC /W3 /WX- /diagnostics:column /sdl /Od /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"pch.h" /Fp"x64\Debug\MFCApplication2.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt MFCApplication2View.cpp
   MFCApplication2View.cpp
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(185,34): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(185,24): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(187,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(187,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(215,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(215,22): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(222,16): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(225,87): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(225,58): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(227,86): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(227,57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(230,21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(286,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(286,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(286,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(334,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(335,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(336,15): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(337,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(353,17): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(356,17): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(359,17): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(362,17): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(187,34): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(187,24): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(189,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(189,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(192,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(192,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(193,18): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(194,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(194,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(222,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(222,22): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(229,16): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(237,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(309,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(309,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(309,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(357,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(358,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(359,15): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(360,18): warning C4244: '=': conversion from 'double' to 'FLOAT', possible loss of data
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(376,17): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(379,17): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(382,17): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\proko\source\repos\MFCApplication2\MFCApplication2\MFCApplication2View.cpp(385,17): warning C4305: '-=': truncation from 'double' to 'float'
   MFCApplication2.vcxproj -> C:\Users\proko\source\repos\MFCApplication2\x64\Debug\MFCApplication2.exe
